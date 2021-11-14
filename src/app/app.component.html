@@ -1,16 +1,17 @@
 <body>
 <div style="width: 35%;">
-  <mat-grid-list cols="1" rowHeight="100px">
+  <mat-grid-list cols="1" rowHeight="100px" style="background-color: rgb(216, 216, 216);">
+    <mat-grid-tile style="border: solid 0px; text-align: right;">{{expression}}</mat-grid-tile>
     <mat-grid-tile style="border: solid 0px; text-align: right;">{{result}}</mat-grid-tile>
   </mat-grid-list>
 </div>
-<div fxLayout="row">
+<div fxLayout="row" style="border-left: solid 1px ;">
   <mat-grid-list cols="3" rowHeight="100px" style="width: 30%;">
     <mat-grid-tile *ngFor="let o of other"
     [colspan]="o.col"
     [rowspan]="o.row"
     style="border: solid 0px; border-top: 0;">
-    <button mat-fab style="background-color: rgb(194, 194, 194);" aria-label="Example icon button with a delete icon">
+    <button mat-fab style="background-color: rgb(194, 194, 194);" aria-label="Example icon button with a delete icon" (click)=executeOther(o)>
       {{o.value}}
     </button>
    </mat-grid-tile>
@@ -21,7 +22,7 @@
     [rowspan]="divide.row"
     style="border: solid 0px;">
 
-    <button mat-fab style="background-color: orange;" aria-label="Example icon button with a delete icon">
+    <button mat-fab style="background-color: orange;" aria-label="Example icon button with a delete icon" (click)=handleOperatorClick(divide)>
       /
     </button>
     </mat-grid-tile>
@@ -33,7 +34,7 @@
     [colspan]="t.col"
     [rowspan]="t.row"
     style="border: solid 0px; border-right: 0; border-top: 0;">
-    <button mat-fab  style="background-color: grey;" aria-label="Example icon button with a delete icon">
+    <button mat-fab  style="background-color: grey;" aria-label="Example icon button with a delete icon" (click)=handleClickNumber(t)>
       {{t.value}}
     </button>
     </mat-grid-tile>
@@ -43,7 +44,7 @@
       [colspan]="op.col"
       [rowspan]="op.row"
       style="border: solid 0px;">
-      <button mat-fab   style="background-color: orange;" aria-label="Example icon button with a delete icon">
+      <button mat-fab   style="background-color: orange;" aria-label="Example icon button with a delete icon" (click)=handleOperatorClick(op)>
         {{op.value}}
       </button></mat-grid-tile>
     </mat-grid-list>

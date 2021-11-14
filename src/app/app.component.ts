@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -6,7 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'angular-calculator';
+
 
   numbers: Tile[] = [{
     col:1,
@@ -78,7 +81,7 @@ export class AppComponent {
   {
     col:1,
     row:1,
-    value: 'X',
+    value: 'x',
     type: TypeButton.OPERATOR
   },
   {
@@ -104,18 +107,21 @@ export class AppComponent {
     col:1,
     row:1,
     value: 'AC',
+    name: "reinit",
     type: TypeButton.OTHER
   },
   {
     col:1,
     row:1,
     value: '+/-',
+    name: "inverse",
     type: TypeButton.OTHER
   },
   {
     col:1,
     row:1,
     value: '%',
+    name: "modulo",
     type: TypeButton.OTHER
   }];
   divide: Tile = {
@@ -126,22 +132,75 @@ export class AppComponent {
   };
   result = 0;
 
+  expression = ""; 
+  experssionNumber: Array<Entry> = []; 
+
+  // TODO refactor 
+  handleClickNumber($event: Tile): void{
+ if(this.experssionNumber.length > 0 && this.experssionNumber[this.experssionNumber.length - 1].type == TypeButton.VALUE){
+        let el  = this.experssionNumber.pop(); 
+        this.experssionNumber.push({
+          type: TypeButton.VALUE,
+          value: el?.value+$event.value
+        });
+   }
+   else {
+    this.experssionNumber.push({
+      type: TypeButton.VALUE,
+      value: $event.value
+    });
+  }
+  this.expression = this.expression + $event.value; 
+  
+  console.table(this.experssionNumber);
+  }
+
+  handleOperatorClick($event: Tile){
+    if($event.value != "="){
+      this.experssionNumber.push({
+        type: TypeButton.OPERATOR,
+        value: $event.value
+      });
+      this.expression = this.expression + " " + $event.value + " "; 
+    } else {
+      this.calculate();
+
+    }
+
+  }
 
 
+private calculate(): void{
+  console.log("calculate ");
+  console.log();
+  let res = eval(this.expression.replace("x", "*"));
+  this.experssionNumber = [];
+  this.result = res;
+}
 
-
-
+executeOther($event: Tile): void{
+  if($event.name=="reinit"){
+    this.experssionNumber= [];
+    this.expression="";
+    this.result= 0;
+  }
+}
 
 }
 
 
-
+export interface Entry{
+  type: TypeButton,
+  value: string
+}
 
 export interface Tile{
   col: number,
   row: number,
   value : string,
-  type: TypeButton
+  type: TypeButton,
+  exec?: any,
+  name?: string
 }
 
 export enum TypeButton {
